@@ -12,17 +12,24 @@ datasource db {
 
 model User {
   // id          Int     @id @default(autoincrement())
-  id          String  @id @default(uuid())
-  name        String
-  email       String
-  isAdmin     Boolean
+  id             String          @id @default(uuid())
+  name           String
+  email          String
+  isAdmin        Boolean
   // largeNumber BigInt
-  preferences Json
+  // preferences Json
   // blob        Bytes
   // blob        Unsupported("")
+  writtenPosts   Post[]          @relation("WrittenPosts")
+  favoritePosts  Post[]          @relation("FavoritePosts")
+  UserPreference UserPreference? //only one reference
+}
 
-  writtenPosts  Post[] @relation("WrittenPosts")
-  favoritePosts Post[] @relation("FavoritePosts")
+model UserPreference {
+  id           String  @id @default(uuid())
+  emailUpdates Boolean
+  user         User    @relation(fields: [userId], references: [id])
+  userId       String  @unique //only one user
 }
 
 model Post {
