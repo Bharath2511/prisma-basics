@@ -12,18 +12,19 @@ datasource db {
 
 model User {
   // id          Int     @id @default(autoincrement())
-  id             String          @id @default(uuid())
-  age            Int
-  name           String
-  email          String          @unique
-  isAdmin        Boolean
+  id               String          @id @default(uuid())
+  age              Int
+  name             String
+  email            String          @unique
+  role             Role            @default(BASIC)
   // largeNumber BigInt
   // preferences Json
   // blob        Bytes
   // blob        Unsupported("")
-  writtenPosts   Post[]          @relation("WrittenPosts")
-  favoritePosts  Post[]          @relation("FavoritePosts")
-  UserPreference UserPreference? //only one reference
+  writtenPosts     Post[]          @relation("WrittenPosts")
+  favoritePosts    Post[]          @relation("FavoritePosts")
+  userPreference   UserPreference? @relation(fields: [userPreferenceId], references: [id])
+  userPreferenceId String?         @unique //only one user
 
   //we can have users with same name and different ages and vice versa, but not same name and age
   //this is a block level attribute represented by @@
@@ -35,12 +36,11 @@ model User {
 model UserPreference {
   id           String  @id @default(uuid())
   emailUpdates Boolean
-  user         User    @relation(fields: [userId], references: [id])
-  userId       String  @unique //only one user
+  user         User? //only one reference
 }
 
 model Post {
-  // id            String     @id @default(uuid())
+  id            String     @id @default(uuid())
   title         String
   averageRating Float
   createdAt     DateTime   @default(now())
@@ -53,12 +53,20 @@ model Post {
   categories    Category[]
 
   //composite id
-  @@id([title, authorId])
+  // @@id([title, authorId])
 }
 
 model Category {
-  id    String @id @default(uuid())
+  id     String  @id @default(uuid())
   //category can have multiple posts
-  name  String @unique
-  posts Post[]
+  name   String  @unique
+  // posts Post[]
+  Post   Post?   @relation(fields: [postId], references: [id])
+  postId String?
+}
+
+enum Role {
+  BASIC
+  EDITOR
+  ADMIN
 }
