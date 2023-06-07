@@ -13,8 +13,9 @@ datasource db {
 model User {
   // id          Int     @id @default(autoincrement())
   id             String          @id @default(uuid())
+  age            Int
   name           String
-  email          String
+  email          String          @unique
   isAdmin        Boolean
   // largeNumber BigInt
   // preferences Json
@@ -23,6 +24,12 @@ model User {
   writtenPosts   Post[]          @relation("WrittenPosts")
   favoritePosts  Post[]          @relation("FavoritePosts")
   UserPreference UserPreference? //only one reference
+
+  //we can have users with same name and different ages and vice versa, but not same name and age
+  //this is a block level attribute represented by @@
+  @@unique([name, age])
+  //good for querying
+  @@index([email])
 }
 
 model UserPreference {
@@ -33,20 +40,25 @@ model UserPreference {
 }
 
 model Post {
-  id            String     @id @default(uuid())
-  rating        Float
-  createdAt     DateTime
-  updatedAt     DateTime
+  // id            String     @id @default(uuid())
+  title         String
+  averageRating Float
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
   author        User       @relation("WrittenPosts", fields: [authorId], references: [id])
   authorId      String
   favoritedBy   User?      @relation("FavoritePosts", fields: [favoritedById], references: [id])
   favoritedById String?
   //post can have multiple categories
   categories    Category[]
+
+  //composite id
+  @@id([title, authorId])
 }
 
 model Category {
   id    String @id @default(uuid())
   //category can have multiple posts
+  name  String @unique
   posts Post[]
 }
