@@ -7,42 +7,46 @@ const prisma = new PrismaClient();
 //   },
 // },
 async function main() {
+  // const preference = await prisma.userPreference.create({
+  //   data:{emailUpdates:true}
+  // })
+  /* we created a userPreference object and connected it to our user */
   // const user = await prisma.user.update({
   //   where: {
-  //     email: "chandra@test2.com",
+  //     email: "bharath@test.com",
   //   },
   //   data: {
-  //     email: "chandra@test.com",
+  //     userPreference: {
+  //       // create:{
+  //       //   emailUpdates:true
+  //       // }
+  //       connect: {
+  //         id: "f3d91a93-cc81-4928-8e9e-9b5c02de0a0a",
+  //       },
+  //     },
   //   },
-  //it can also have include, select
   // });
-  // const users = await prisma.user.updateMany({
+  // console.log(user);
+  /*when we query we get the respective result */
+  //   const user = await prisma.user.findFirst({
+  //     where: {
+  //       email: "bharath@test.com",
+  //     },
+  //     include: { userPreference: true },
+  //   });
+  //   console.log(user);
+  /* we can disconnect as well */
+  // const user = await prisma.user.update({
   //   where: {
-  //     name: "Chandra",
+  //     email: "bharath@test.com",
   //   },
   //   data: {
-  //     name: "Srinivas",
+  //     userPreference: {
+  //       disconnect: true,
+  //     },
   //   },
-  //it cannot also have include, select
   // });
-
-  //updateMany where clause can take any column, but for update there should be unique
-
-  const user = await prisma.user.update({
-    where: {
-      email: "bharath@test.com",
-    },
-    data: {
-      age: {
-        // increment: 1,
-        // decrement: 2,
-        // multiply: 3,
-        // divide: 10,
-      },
-    },
-  });
-
-  console.log(user);
+  /* we can do connect and cannot do disconnect for creating users" */
 }
 main()
   .catch((e) => {
