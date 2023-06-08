@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { truncate } from "fs";
 const prisma = new PrismaClient();
 // userPreference: {
 //   create: {
@@ -22,8 +23,34 @@ async function main() {
       /* includes one of the queries */
       // OR: [{ email: "bharath@test.com" }, { age: { lte: 30 } }],
       // NOT: [{ name: "Bharath" }, { age: 27 }],
+
+      //relationships as well
+      // userPreference: {
+      //   emailUpdates: true,
+      // },
+      writtenPosts: {
+        /* do every posts written by this user has a title of test */
+        // every: { title: "Test" },
+        /* do none of the posts written by this user has a title of test */
+        // none: { title: "Test" },
+        /* do any of the posts title is Test*/
+        some: { title: "Test" },
+      },
     },
   });
+  const post = await prisma.post.findMany({
+    where: {
+      author: {
+        // is: {
+        //   age: 27,
+        // },
+        // isNot: {
+        //   age: 27,
+        // },
+      },
+    },
+  });
+  console.log(post);
   console.log(user);
 }
 main()
