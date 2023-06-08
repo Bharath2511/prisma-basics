@@ -7,50 +7,41 @@ const prisma = new PrismaClient();
 //   },
 // },
 async function main() {
-  const user = await prisma.user.findMany({
-    where: {
-      // name: {equals:"Chandra"},
-      // name: { not: "Chandra" },
-      // name: { in: ["Bharath", "Chandra"] },
-      // name: { notIn: ["Bharath", "Chandra"] },
-      // name: "Chandra",
-      // age: { lte: 20 },
-      // email: { contains: "test1.com" },
-      // email: { endsWith: "@test1.com" },
-      // name: { startsWith: "Chandra" },
-      /* includes everything */
-      // AND: [{ name: { startsWith: "Bhar" } }, { age: { gt: 27 } }],
-      /* includes one of the queries */
-      // OR: [{ email: "bharath@test.com" }, { age: { lte: 30 } }],
-      // NOT: [{ name: "Bharath" }, { age: 27 }],
+  // const user = await prisma.user.update({
+  //   where: {
+  //     email: "chandra@test2.com",
+  //   },
+  //   data: {
+  //     email: "chandra@test.com",
+  //   },
+  //it can also have include, select
+  // });
+  // const users = await prisma.user.updateMany({
+  //   where: {
+  //     name: "Chandra",
+  //   },
+  //   data: {
+  //     name: "Srinivas",
+  //   },
+  //it cannot also have include, select
+  // });
 
-      //relationships as well
-      // userPreference: {
-      //   emailUpdates: true,
-      // },
-      writtenPosts: {
-        /* do every posts written by this user has a title of test */
-        // every: { title: "Test" },
-        /* do none of the posts written by this user has a title of test */
-        // none: { title: "Test" },
-        /* do any of the posts title is Test*/
-        some: { title: "Test" },
-      },
-    },
-  });
-  const post = await prisma.post.findMany({
+  //updateMany where clause can take any column, but for update there should be unique
+
+  const user = await prisma.user.update({
     where: {
-      author: {
-        // is: {
-        //   age: 27,
-        // },
-        // isNot: {
-        //   age: 27,
-        // },
+      email: "bharath@test.com",
+    },
+    data: {
+      age: {
+        // increment: 1,
+        // decrement: 2,
+        // multiply: 3,
+        // divide: 10,
       },
     },
   });
-  console.log(post);
+
   console.log(user);
 }
 main()
