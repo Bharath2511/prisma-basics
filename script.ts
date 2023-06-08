@@ -6,29 +6,37 @@ const prisma = new PrismaClient();
 //   },
 // },
 async function main() {
-  await prisma.user.deleteMany();
-  const user = await prisma.user.createMany({
-    data: [
-      {
+  const user = await prisma.user.findUnique({
+    where: {
+      // email: "bharath@test.com",
+      //unique keys for user
+      name_age: {
+        age: 27,
         name: "Bharath",
-        email: "bharath@test.com",
-        age: 27,
       },
-      {
-        name: "Chandra",
-        email: "chandra@test.com",
-        age: 27,
-      },
-    ],
-    // include: {
-    //   userPreference: true,
-    // },
-    // select: {
-    //   name: true,
-    //   userPreference: { select: { id: true } },
-    // },
+    },
   });
-  console.log(user);
+  //find first entry
+  const findFirstUser = await prisma.user.findFirst({
+    where: {
+      name: "Bharath",
+    },
+  });
+  const users = await prisma.user.findMany({
+    where: {
+      name: "Chandra",
+    },
+    //this will return entries with distinct name and age
+    distinct: ["name", "age"],
+    orderBy: {
+      age: "desc",
+    },
+    //pagination: takes 2
+    take: 2,
+    //skips 1st
+    skip: 1,
+  });
+  console.log(users);
 }
 main()
   .catch((e) => {
