@@ -6,37 +6,25 @@ const prisma = new PrismaClient();
 //   },
 // },
 async function main() {
-  const user = await prisma.user.findUnique({
+  const user = await prisma.user.findMany({
     where: {
-      // email: "bharath@test.com",
-      //unique keys for user
-      name_age: {
-        age: 27,
-        name: "Bharath",
-      },
+      // name: {equals:"Chandra"},
+      // name: { not: "Chandra" },
+      // name: { in: ["Bharath", "Chandra"] },
+      // name: { notIn: ["Bharath", "Chandra"] },
+      // name: "Chandra",
+      // age: { lte: 20 },
+      // email: { contains: "test1.com" },
+      // email: { endsWith: "@test1.com" },
+      // name: { startsWith: "Chandra" },
+      /* includes everything */
+      // AND: [{ name: { startsWith: "Bhar" } }, { age: { gt: 27 } }],
+      /* includes one of the queries */
+      // OR: [{ email: "bharath@test.com" }, { age: { lte: 30 } }],
+      // NOT: [{ name: "Bharath" }, { age: 27 }],
     },
   });
-  //find first entry
-  const findFirstUser = await prisma.user.findFirst({
-    where: {
-      name: "Bharath",
-    },
-  });
-  const users = await prisma.user.findMany({
-    where: {
-      name: "Chandra",
-    },
-    //this will return entries with distinct name and age
-    distinct: ["name", "age"],
-    orderBy: {
-      age: "desc",
-    },
-    //pagination: takes 2
-    take: 2,
-    //skips 1st
-    skip: 1,
-  });
-  console.log(users);
+  console.log(user);
 }
 main()
   .catch((e) => {
